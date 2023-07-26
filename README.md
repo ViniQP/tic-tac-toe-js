@@ -1,1 +1,1 @@
-# tic-tac-toe-js
+Project requested by TheOdinProject (https://www.theodinproject.com)
