@@ -196,5 +196,4 @@ const gameController = (() => {
     game
   }
   
-
 })();
