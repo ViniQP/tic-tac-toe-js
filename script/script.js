@@ -1,13 +1,28 @@
+const Player = (symbol, name) => {
+  const playerSymbol = symbol;
+  const playerName = name;
+
+  return {
+    playerSymbol,
+    playerName
+  }
+}
+
 const gameBoard = (() => {
-  const _board = [" ", " ", " ", " ", " ", " ", " ", " ", " "];
-  let playerOne, playerTwo = null;
+  const _board = ["", "", "", "", "", "", "", "", ""];
+
+  function getBoard() {
+    return _board;
+  }
 
   function markOnBoard(position, playerSymbol) {
-    if (_board[position] === " ") {
+    if (_board[position] === "") {
       _board[position] = playerSymbol;
+      return true;
     } else {
       console.log("ERROR, position already marked!");
-      playMove(playerSymbol);
+      displayController.showPositionError();
+      return false;
     }
   }
 
@@ -19,12 +34,10 @@ const gameBoard = (() => {
     return true;
   }
 
-  function playMove(playerSymbol) {
-    let move = parseInt(prompt("Player "+ playerSymbol + " move"));
-    move--
+  function playTurn(move, playerSymbol) {
 
     if (validateMove(move)) {
-      markOnBoard(move, playerSymbol);
+      return markOnBoard(move, playerSymbol)
     } else {
       console.log("Invalid Move!");
       playMove(playerSymbol);
@@ -62,63 +75,176 @@ const gameBoard = (() => {
     return conditionStatus;
   }
 
-  function checkTie(moveCount) {
-      if (moveCount == 9) {
-        return true;
-      };
+  function checkTie() {
+    for (let i = 0; i < 9; i++) {
+      if (_board[i] === "") {
+        return false
+      }
+    }
 
-    return false;
+    return true
   }
 
-  function game() {
-    playerOne = Player("X");
-    console.log(playerOne.playerSymbol)
-    playerTwo = Player("O");
+  // function game() {
+  //   playerOne = Player("X", prompt("Insert the Player 1 name"));
+  //   console.log(playerOne.playerSymbol)
+  //   playerTwo = Player("O", prompt("Insert the Player 2 name"));
 
-    let moveCount = 0;
-    printBoard();
-    do {
-      console.log("Player X turn: ");
-      playMove(playerOne.playerSymbol);
-      moveCount++
-      if (checkVictory(playerOne.playerSymbol)) {
-        console.log("Player X WINS!");
-        printBoard();
-        break;
-      } else if (checkTie(moveCount)) {
-        console.log("TIE!")
-        break;
-      };   
+  //   let moveCount = 0;
+  //   printBoard();
+  //   do {
+  //     console.log("Player X turn: ");
+  //     displayController.tellTurn(playerOne.playerName)
+  //     playMove(playerOne.playerSymbol);
+  //     moveCount++
+  //     if (checkVictory(playerOne.playerSymbol)) {
+  //       console.log("Player X WINS!");
+  //       printBoard();
+  //       break;
+  //     } else if (checkTie(moveCount)) {
+  //       console.log("TIE!")
+  //       break;
+  //     };   
 
-      printBoard();
+  //     printBoard();
 
-      console.log("Player O turn: ");
-      playMove(playerTwo.playerSymbol);
-      moveCount++
-      if (checkVictory(playerTwo.playerSymbol)) {
-        console.log("Player O WINS!")
-        printBoard();
-        break;
-      } else if (checkTie(moveCount)) {
-        console.log("TIE!")
-        printBoard();
-        break;
-      };
+  //     console.log("Player O turn: ");
+  //     displayController.tellTurn(playerTwo.playerName)
+  //     playMove(playerTwo.playerSymbol);
+  //     moveCount++
+  //     if (checkVictory(playerTwo.playerSymbol)) {
+  //       console.log("Player O WINS!")
+  //       printBoard();
+  //       break;
+  //     } else if (checkTie(moveCount)) {
+  //       console.log("TIE!")
+  //       printBoard();
+  //       break;
+  //     };
 
-      printBoard();
-    } while(moveCount);
+  //     printBoard();
+  //   } while(moveCount);
+  // }
+
+
+  return {
+    getBoard,
+    printBoard,
+    playTurn,
+    checkVictory,
+    checkTie
+  }
+})();
+
+const displayController = (() => {
+  const boardPlace = document.getElementById("board-place");
+  const resetButton = document.getElementById("reset-button");
+
+  resetButton.onclick = () => {
+    location.reload();
+  }
+
+  function printBoard(board) {
+    let count = 0;
+    board.forEach( position => {
+      const positionDiv = document.createElement("div");
+      positionDiv.classList.add("position-square");
+      positionDiv.id = count;
+      positionDiv.innerText = position;
+
+      positionDiv.onclick = () => {
+        gameController.game.playRound(positionDiv);
+      }
+      
+      boardPlace.appendChild(positionDiv);
+      count++
+    })
+  }
+
+  function updateTile(tile, playerSymbol) {
+    if (tile.innerText === "") {
+      tile.innerText = playerSymbol
+    }
+  }
+
+  function tellTurn(playerName) {
+    const infoParagraph = document.getElementById("info-paragraph");
+    infoParagraph.textContent = "It's " + playerName + " turn!";
+  }
+
+  function congratulateVictory(playerName) {
+    const infoParagraph = document.getElementById("info-paragraph");
+    infoParagraph.textContent = "" + playerName + " has won!";
+  }
+
+  function showTie() {
+    const infoParagraph = document.getElementById("info-paragraph");
+    infoParagraph.textContent = "TIE!";
+  }
+
+  function showPositionError() {
+    const infoParagraph = document.getElementById("info-paragraph");
+    infoParagraph.textContent = "Position already marked!";
   }
 
   return {
     printBoard,
-    game
+    updateTile,
+    tellTurn,
+    congratulateVictory,
+    showTie,
+    showPositionError
   }
 })();
 
-const Player = (symbol) => {
-  const playerSymbol = symbol
+const gameController = (() => {
+  function createPlayer(symbol, name) {
+    let player = Player(symbol, name);
+
+    return player;
+  }
+
+  const game = (() => {
+    displayController.printBoard(gameBoard.getBoard());
+
+    let playerOne = createPlayer("X", "Player 1");
+    let playerTwo = createPlayer("O", "Player 2");
+    let currentPlayer = playerOne;
+    
+    function swapPlayer() {
+      if (currentPlayer === playerOne) {
+        currentPlayer = playerTwo
+      } else {
+        currentPlayer = playerOne
+      }
+    }
+
+    function playRound(tile) {
+          TurnStatus = gameBoard.playTurn(tile.id, currentPlayer.playerSymbol);
+          displayController.updateTile(tile, currentPlayer.playerSymbol);
+
+          if (TurnStatus) {
+            if (gameBoard.checkVictory(currentPlayer.playerSymbol)) {
+              displayController.congratulateVictory(currentPlayer.playerName);
+              return
+            } else if (gameBoard.checkTie()) {
+              displayController.showTie();
+              return
+            }
+            else {
+              swapPlayer();
+            }
+          }
+    }
+
+    return {
+      playRound
+    }
+  })();
 
   return {
-    playerSymbol
+    game
   }
-}
+  
+
+})();

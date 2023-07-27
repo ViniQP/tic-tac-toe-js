@@ -1,0 +1,64 @@
+button, input[type="submit"], input[type="reset"] {
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+}
+
+body {
+  font-family: cursive, monospace;
+  min-height: 100vh;
+
+  display: flex;
+  align-items: start;
+  justify-content: center;
+}
+
+.board-area {
+  display: flex;
+
+  gap: 75px;
+}
+
+#board-place {
+  /* background-color: red; */
+
+  display: grid;
+  gap: 5px;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+}
+
+.position-square {
+
+  font-size: 50px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: 3px solid black;
+  border-radius: 10%;
+
+  background-color: #9A48D0;
+}
+
+.position-square:hover {
+  cursor: pointer;
+
+  background-color: #B288C0;
+}
+
+.buttons-place {
+  align-self: center;
+}
+
+#reset-button {
+  width: 100px;
+  height: 50px;
+
+  background-color: #E4B7E5;
+}
