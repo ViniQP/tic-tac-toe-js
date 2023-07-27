@@ -198,6 +198,7 @@ const displayController = (() => {
 })();
 
 const gameController = (() => {
+  let gameOver = false;
   function createPlayer(symbol, name) {
     let player = Player(symbol, name);
 
@@ -220,21 +221,23 @@ const gameController = (() => {
     }
 
     function playRound(tile) {
-          TurnStatus = gameBoard.playTurn(tile.id, currentPlayer.playerSymbol);
-          displayController.updateTile(tile, currentPlayer.playerSymbol);
+      if (!gameOver) {
+        TurnStatus = gameBoard.playTurn(tile.id, currentPlayer.playerSymbol);
+        displayController.updateTile(tile, currentPlayer.playerSymbol);
 
-          if (TurnStatus) {
-            if (gameBoard.checkVictory(currentPlayer.playerSymbol)) {
-              displayController.congratulateVictory(currentPlayer.playerName);
-              return
-            } else if (gameBoard.checkTie()) {
-              displayController.showTie();
-              return
-            }
-            else {
-              swapPlayer();
-            }
+        if (TurnStatus) {
+          if (gameBoard.checkVictory(currentPlayer.playerSymbol)) {
+            displayController.congratulateVictory(currentPlayer.playerName);
+            gameOver = true;
+          } else if (gameBoard.checkTie()) {
+            displayController.showTie();
+            gameOver = true;
           }
+          else {
+            swapPlayer();
+          }
+        }
+      }
     }
 
     return {

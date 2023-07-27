@@ -10,46 +10,64 @@ button, input[type="submit"], input[type="reset"] {
 
 body {
   font-family: cursive, monospace;
-  min-height: 100vh;
-
   display: flex;
-  align-items: start;
+  flex-direction: column;
+  align-items: center;
+
+  margin: 0;
+
+}
+
+.nav-header-area {
+  display: grid;
   justify-content: center;
+
+  min-width: 80%;
+  margin: 0;
+
+  background-color: #201A23;
+  color: white;
 }
 
 .board-area {
+  width: 79%;
   display: flex;
-
+  justify-content: center;
   gap: 75px;
+
+  padding-top: 10vh;
+  padding-bottom: 10vh;
+  border-bottom: 10px solid #201A23;
 }
 
 #board-place {
   /* background-color: red; */
 
   display: grid;
-  gap: 5px;
+  gap: 0px;
   grid-template-columns: repeat(3, 100px);
   grid-template-rows: repeat(3, 100px);
 }
 
 .position-square {
-
   font-size: 50px;
 
   display: flex;
   justify-content: center;
   align-items: center;
 
-  border: 3px solid black;
-  border-radius: 10%;
+  border: 5px solid black;
+  border-radius: 10%; 
 
-  background-color: #9A48D0;
+  background-color: #731DD8;
+  color: white;
 }
 
 .position-square:hover {
   cursor: pointer;
 
-  background-color: #B288C0;
+  background-color: #E4B7E5;
+  color: black;
 }
 
 .buttons-place {
@@ -61,4 +79,9 @@ body {
   height: 50px;
 
   background-color: #E4B7E5;
+}
+
+#reset-button:hover {
+  color: white;
+  background-color: #201A23;
 }
