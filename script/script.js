@@ -20,7 +20,6 @@ const gameBoard = (() => {
       _board[position] = playerSymbol;
       return true;
     } else {
-      console.log("ERROR, position already marked!");
       displayController.showPositionError();
       return false;
     }
@@ -39,17 +38,9 @@ const gameBoard = (() => {
     if (validateMove(move)) {
       return markOnBoard(move, playerSymbol)
     } else {
-      console.log("Invalid Move!");
       playMove(playerSymbol);
     }
   };
-
-  function printBoard() {
-    console.log(_board[0] + " | " + _board[1] + " | "  + _board[2] + "\n"
-    + _board[3] + " | " + _board[4] + " | "  + _board[5] + "\n"
-    + _board[6] + " | " + _board[7] + " | "  + _board[8] + "\n"
-    )
-  }
 
   function checkVictory(playerSymbol) {
     let conditionStatus = false;
@@ -67,7 +58,6 @@ const gameBoard = (() => {
       });
 
       if (count === 3) {
-        console.log("Player " + playerSymbol + " has won!")
         conditionStatus = true;
       }
     });
@@ -85,51 +75,8 @@ const gameBoard = (() => {
     return true
   }
 
-  // function game() {
-  //   playerOne = Player("X", prompt("Insert the Player 1 name"));
-  //   console.log(playerOne.playerSymbol)
-  //   playerTwo = Player("O", prompt("Insert the Player 2 name"));
-
-  //   let moveCount = 0;
-  //   printBoard();
-  //   do {
-  //     console.log("Player X turn: ");
-  //     displayController.tellTurn(playerOne.playerName)
-  //     playMove(playerOne.playerSymbol);
-  //     moveCount++
-  //     if (checkVictory(playerOne.playerSymbol)) {
-  //       console.log("Player X WINS!");
-  //       printBoard();
-  //       break;
-  //     } else if (checkTie(moveCount)) {
-  //       console.log("TIE!")
-  //       break;
-  //     };   
-
-  //     printBoard();
-
-  //     console.log("Player O turn: ");
-  //     displayController.tellTurn(playerTwo.playerName)
-  //     playMove(playerTwo.playerSymbol);
-  //     moveCount++
-  //     if (checkVictory(playerTwo.playerSymbol)) {
-  //       console.log("Player O WINS!")
-  //       printBoard();
-  //       break;
-  //     } else if (checkTie(moveCount)) {
-  //       console.log("TIE!")
-  //       printBoard();
-  //       break;
-  //     };
-
-  //     printBoard();
-  //   } while(moveCount);
-  // }
-
-
   return {
     getBoard,
-    printBoard,
     playTurn,
     checkVictory,
     checkTie
